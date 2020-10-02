@@ -1,6 +1,5 @@
 package com.example.simpleprojectmongodb.db.seed;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,34 +13,22 @@ import com.example.simpleprojectmongodb.model.service.UserService;
 
 @Configuration
 public class DataBaseSeeder implements CommandLineRunner{
+
+	@Autowired 
+	UserService userService;
 	
 	@Autowired
-	UserRepository userRepository;
-
-	@Autowired
-	UserService userService;
-
-	List<User> users = new ArrayList<>();
-
+	private UserRepository userRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
-		this.userSeed();
-		this.writeResources();
-	}
-	
-	private void userSeed(){
-		userRepository.deleteAll();
-		users = Arrays.asList(
-			userService.save(new User(null, "Aquilla Silva", "aquilla@aquilla.com", "123456")),
-			userService.save(new User(null, "Alejandro Silva", "alejandro@alejandro.com", "123456")),
-			userService.save(new User(null, "Maria Cicera", "maria@maria.com", "123456"))
-		);
-	}
-	
-	private void writeResources() {
-		System.out.println("================== Starter: UserSeeder ==================");
-		this.users.forEach(System.out::println);
-		System.out.println("================== Finish: UserSeeder ==================");
-	}
 
+		userRepository.deleteAll();
+		User user1 = new User("Aquilla Silva", "aquilla@aquilla.com", userService.generateBcrypt("123456"));
+		User user2 = new User("Alejandro Silva", "alejandro@alejandro.com", userService.generateBcrypt("123456"));
+		User user3 = new User("Maria Cicera", "maria@maria.com", userService.generateBcrypt("123456"));
+
+		List<User> users = userRepository.saveAll(Arrays.asList(user1, user2, user3));
+		users.forEach(System.out::println);
+	}
 }

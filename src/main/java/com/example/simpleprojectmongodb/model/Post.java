@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.example.simpleprojectmongodb.model.dto.response.AuthorDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -37,6 +38,6 @@ public class Post implements Serializable{
 	private String body;
 
 	@Getter @NotBlank
-	private String user;
+	private AuthorDTO user;
 
 }

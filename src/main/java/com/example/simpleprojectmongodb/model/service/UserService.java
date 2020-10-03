@@ -1,66 +1,87 @@
 package com.example.simpleprojectmongodb.model.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleprojectmongodb.model.User;
+import com.example.simpleprojectmongodb.model.dto.request.UserSaveDTO;
+import com.example.simpleprojectmongodb.model.dto.request.UserUpdateDTO;
+import com.example.simpleprojectmongodb.model.dto.response.UserDTO;
 import com.example.simpleprojectmongodb.model.repository.UserRepository;
 import com.example.simpleprojectmongodb.model.resource.exception.ResourceNotFound;
 import com.example.simpleprojectmongodb.model.service.exception.AlreadyEmailException;
-import com.example.simpleprojectmongodb.model.service.util.Util;
 
 @Service
 public class UserService {
 	
 	@Autowired
 	private UserRepository repository;
-	
-	Util util = new Util();
 
-//	private CustomUserRepository customUserRepositoryImpl;
-
-	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+	private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
-	public Page<User> findAll(int page, int size){
-		return repository.findAll(util.createPageRequest(page, size, Sort.Direction.ASC, "name"));
-	}
-	
-	public User findById(String id) {
-		Optional<User> recoverUser = repository.findById(id);
-		recoverUser.orElseThrow(() -> new ResourceNotFound("não encontrado"));
-		return recoverUser.get();
+	// Private methods
+	private User findAndValidateById(String id) {
+		Optional<User> obj = repository.findById(id);
+		obj.orElseThrow(() -> new ResourceNotFound("não encontrado"));
+		return obj.get();
 	}
 	
 	private User findOneByEmail(String email) {
 		return repository.findByEmail(email);
 	}
 	
-	public Page<User> findByNameOrEmail(String filter, int page, int size){
-		return repository.findByNameOrEmail(filter, util.createPageRequest(page, size, Sort.Direction.ASC, "name"));
-	}
-
-	public User save(User user) {
-		if(emailExists(user.getEmail())) {
-			throw new AlreadyEmailException("e-mail já existente na base de dados");
-		}
-		return repository.save(user);
+	private boolean emailExists(String email) {
+		return findOneByEmail(email) == null ? false : true;
 	}
 	
-	public void delete(String id) {
-		repository.delete(this.findById(id));
-	}
-
-	public String generateBcrypt(String password) {
+	private String generateBcrypt(String password) {
 		String bcryptPassword = bcrypt.encode(password);
 		return bcryptPassword;
 	}
 	
-	private boolean emailExists(String email) {
-		return findOneByEmail(email) == null ? false : true;
+	// Public methods	
+	public List<UserDTO> findAll(int page, int size){
+		return repository.findAll(UtilService.createPageRequest(page, size, Sort.Direction.ASC, "name"))
+				.stream()
+				.map(obj -> UserDTO.fromResource(obj))
+				.collect(Collectors.toList());
+	}
+	
+	public UserDTO findById(String id) {
+		return UserDTO.fromResource(this.findAndValidateById(id));
+	}
+
+	public List<UserDTO> findByNameOrEmail(String filter, int page, int size){
+		return repository.findByNameOrEmail(filter, UtilService.createPageRequest(page, size, Sort.Direction.ASC, "name"))
+				.stream()
+				.map(obj -> UserDTO.fromResource(obj))
+				.collect(Collectors.toList());
+	}
+
+	public UserDTO save(UserSaveDTO body) {
+		if(emailExists(body.getEmail())) {
+			throw new AlreadyEmailException("e-mail já existente na base de dados");
+		}
+		User obj = body.toResource();
+		obj.setPassword(this.generateBcrypt(obj.getPassword()));
+		return UserDTO.fromResource(repository.save(obj));
+	}
+	
+	public UserDTO update(String id, UserUpdateDTO body) {
+		User obj = this.findAndValidateById(id);
+		User dto = body.toResource();
+		BeanUtils.copyProperties(dto, obj, "id");
+		return UserDTO.fromResource(repository.save(obj));
+	}
+	
+	public void delete(String id) {
+		repository.deleteById(this.findAndValidateById(id).getId());
 	}
 }

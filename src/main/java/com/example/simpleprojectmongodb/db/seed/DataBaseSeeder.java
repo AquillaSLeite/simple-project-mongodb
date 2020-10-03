@@ -4,12 +4,14 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import com.example.simpleprojectmongodb.model.Post;
 import com.example.simpleprojectmongodb.model.User;
+import com.example.simpleprojectmongodb.model.dto.response.AuthorDTO;
 import com.example.simpleprojectmongodb.model.repository.PostRepository;
 import com.example.simpleprojectmongodb.model.repository.UserRepository;
 import com.example.simpleprojectmongodb.model.service.UserService;
@@ -17,11 +19,14 @@ import com.example.simpleprojectmongodb.model.service.UserService;
 @Configuration
 public class DataBaseSeeder implements CommandLineRunner{
 
+	ModelMapper modelMapper = new ModelMapper();
+	
 	@Autowired 
 	UserService userService;
 	
 	@Autowired
 	private UserRepository userRepository;
+	
 	@Autowired
 	private PostRepository postRepository;
 	
@@ -37,9 +42,9 @@ public class DataBaseSeeder implements CommandLineRunner{
 		List<User> users = userRepository.saveAll(Arrays.asList(user1, user2, user3));
 		
 		for(User user : users) {
-			Post post1 = new Post(null, Instant.now(), user.getName() + " - title1", "body1", user.getId());
-			Post post2 = new Post(null, Instant.now(), user.getName() + " - title2", "body2", user.getId());
-			Post post3 = new Post(null, Instant.now(), user.getName() + " - title3", "body3", user.getId());
+			Post post1 = new Post(null, Instant.now(), user.getName() + " - title1", "body1", modelMapper.map(user, AuthorDTO.class));
+			Post post2 = new Post(null, Instant.now(), user.getName() + " - title2", "body2", modelMapper.map(user, AuthorDTO.class));
+			Post post3 = new Post(null, Instant.now(), user.getName() + " - title3", "body3", modelMapper.map(user, AuthorDTO.class));
 			postRepository.saveAll(Arrays.asList(post1, post2, post3));
 			
 			user.getPosts().addAll(Arrays.asList(post1, post2, post3));

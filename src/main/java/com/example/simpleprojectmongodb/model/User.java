@@ -22,7 +22,7 @@ import lombok.ToString;
 @Document(collection = "users")
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = "password")
+@ToString
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
@@ -35,7 +35,7 @@ public class User implements Serializable{
 	@Getter @Setter @NotBlank @Email @Size(min = 5, max = 50)
 	private String email;
 	
-	@Getter @NotBlank @NotEmpty
+	@Getter @Setter @NotBlank @NotEmpty
 	private String password;
 	
 	@Getter @DBRef(lazy = true)

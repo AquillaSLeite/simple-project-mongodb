@@ -1,8 +1,10 @@
-package com.example.simpleprojectmongodb.model.dto;
+package com.example.simpleprojectmongodb.model.dto.response;
 
 import java.io.Serializable;
 
 import org.springframework.context.annotation.Configuration;
+
+import com.example.simpleprojectmongodb.model.User;
 
 import lombok.Data;
 
@@ -14,4 +16,12 @@ public class UserDTO implements Serializable {
 	private String id;
 	private String name;
 	private String email;
+	
+	public static UserDTO fromResource(User obj) {
+		UserDTO dto = new UserDTO();
+		dto.setId(obj.getId());
+		dto.setName(obj.getName());
+		dto.setEmail(obj.getEmail());
+		return dto;
+	}
 }

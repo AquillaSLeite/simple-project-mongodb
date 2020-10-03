@@ -1,18 +1,19 @@
 package com.example.simpleprojectmongodb.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.example.simpleprojectmongodb.model.generic.GenericModel;
-import com.example.simpleprojectmongodb.model.service.UserService;
-
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,10 +21,13 @@ import lombok.ToString;
 
 @Document(collection = "users")
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString(exclude = "password", callSuper = true)
-public class User extends GenericModel implements Serializable{
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = "password")
+public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
+	
+	@Id @Getter
+	private String id;
 
 	@Getter @Setter @NotBlank @Size(min = 5, max = 50)
 	private String name;
@@ -33,9 +37,15 @@ public class User extends GenericModel implements Serializable{
 	
 	@Getter @NotBlank @NotEmpty
 	private String password;
+	
+	@Getter @DBRef(lazy = true)
+	List<Post> posts = new ArrayList<>();
 
-	public void setPassword(String password) {
-		UserService userService = new UserService();
-		this.password = userService.generateBcrypt(password);
-	}		
+	public User(String id, String name, String email, String password) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
 }

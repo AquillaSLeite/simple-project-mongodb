@@ -1,4 +1,4 @@
-package com.example.simpleprojectmongodb.model.resource.exception;
+package com.example.simpleprojectmongodb.model.controller.exception;
 
 public class ResourceNotFound extends RuntimeException {
 	private static final long serialVersionUID = 1L;

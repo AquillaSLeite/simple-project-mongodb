@@ -11,12 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.simpleprojectmongodb.model.User;
+import com.example.simpleprojectmongodb.model.controller.exception.ResourceNotFound;
 import com.example.simpleprojectmongodb.model.dto.request.UserSaveDTO;
 import com.example.simpleprojectmongodb.model.dto.request.UserUpdateDTO;
 import com.example.simpleprojectmongodb.model.dto.response.PostDTO;
 import com.example.simpleprojectmongodb.model.dto.response.UserDTO;
 import com.example.simpleprojectmongodb.model.repository.UserRepository;
-import com.example.simpleprojectmongodb.model.resource.exception.ResourceNotFound;
 import com.example.simpleprojectmongodb.model.service.exception.AlreadyEmailException;
 
 @Service

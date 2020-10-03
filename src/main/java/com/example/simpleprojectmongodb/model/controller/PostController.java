@@ -1,4 +1,4 @@
-package com.example.simpleprojectmongodb.model.resource;
+package com.example.simpleprojectmongodb.model.controller;
 
 import java.util.List;
 
@@ -19,22 +19,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.simpleprojectmongodb.model.dto.request.UserSaveDTO;
-import com.example.simpleprojectmongodb.model.dto.request.UserUpdateDTO;
+import com.example.simpleprojectmongodb.model.dto.request.PostSaveDTO;
+import com.example.simpleprojectmongodb.model.dto.request.PostUpdateDTO;
 import com.example.simpleprojectmongodb.model.dto.response.PostDTO;
-import com.example.simpleprojectmongodb.model.dto.response.UserDTO;
-import com.example.simpleprojectmongodb.model.service.UserService;
+import com.example.simpleprojectmongodb.model.service.PostService;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api/posts")
 @Validated
-public class UserResource {
+public class PostController {
 
 	@Autowired
-	private UserService service;
+	private PostService service;
 
 	@GetMapping
-	public ResponseEntity<List<UserDTO>> index(
+	public ResponseEntity<List<PostDTO>> index(
 			@RequestParam(value = "page", defaultValue = "0") @Min(0) Integer page,
 			@RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size
 	) {
@@ -42,18 +41,18 @@ public class UserResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<UserDTO> store(@Valid @RequestBody UserSaveDTO body) {
-		UserDTO bodyDTO = service.save(body);
-		return ResponseEntity.created(UtilResource.generatedUri(bodyDTO.getId())).body(bodyDTO);
+	public ResponseEntity<PostDTO> store(@Valid @RequestBody PostSaveDTO body) {
+		PostDTO bodyDTO = service.save(body);
+		return ResponseEntity.created(UtilController.generatedUri(bodyDTO.getId())).body(bodyDTO);
 	}
 
 	@GetMapping(value = "/{id}")
-	public UserDTO show(@PathVariable String id) {
+	public PostDTO show(@PathVariable String id) {
 		return service.findById(id);
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> update(@PathVariable String id, @Valid @RequestBody UserUpdateDTO body) {
+	public ResponseEntity<PostDTO> update(@PathVariable String id, @Valid @RequestBody PostUpdateDTO body) {
 		return ResponseEntity.ok(service.update(id, body));
 	}
 
@@ -65,17 +64,11 @@ public class UserResource {
 	
 	//Custom Routes	
 	@GetMapping("/search")
-	public ResponseEntity<List<UserDTO>> indexBySearch(
+	public ResponseEntity<List<PostDTO>> indexBySearch(
 			@RequestParam(value = "filter", defaultValue = "") @NotBlank String filter,
 			@RequestParam(value = "page", defaultValue = "0") @Min(0) Integer page,
 			@RequestParam(value = "size", defaultValue = "10") @Min(1) Integer size
 	) {
-		return ResponseEntity.ok().body(service.findByNameOrEmail(filter, page, size));
-	}
-	
-	
-	@GetMapping(value = "/{id}/posts")
-	public List<PostDTO> findPosts(@PathVariable String id) {
-		return service.postsByUser(id);
+		return ResponseEntity.ok().body(service.findByTitleAndBody(filter, page, size));
 	}
 }

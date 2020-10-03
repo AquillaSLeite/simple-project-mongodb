@@ -1,4 +1,4 @@
-package com.example.simpleprojectmongodb.model.resource.exception;
+package com.example.simpleprojectmongodb.model.controller.exception;
 
 import java.io.Serializable;
 import java.time.Instant;

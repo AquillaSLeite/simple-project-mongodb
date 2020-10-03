@@ -21,7 +21,7 @@ public class PostDTO {
 		dto.setDate(obj.getDate());
 		dto.setTitle(obj.getTitle());
 		dto.setBody(obj.getBody());
-		dto.setUser(obj.getUser());
+		dto.setUser(AuthorDTO.fromResource(obj.getUser()));
 		return dto;
 	}
 	

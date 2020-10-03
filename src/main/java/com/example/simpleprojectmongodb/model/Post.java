@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.time.Instant;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.example.simpleprojectmongodb.model.dto.response.AuthorDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -27,16 +26,10 @@ public class Post implements Serializable{
 	
 	@Id
 	private String id;
-	
 	@NotBlank @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT")
 	private Instant date;
-	
-	@NotBlank @Size(min = 5, max = 50)
 	private String title;
-	
-	@NotBlank @Size(min = 5, max = 150)
 	private String body;
-
-	@NotBlank
-	private AuthorDTO user;
+	@DBRef(lazy = true)
+	private User user;
 }

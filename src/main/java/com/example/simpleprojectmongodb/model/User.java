@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,13 +25,13 @@ public class User implements Serializable{
 	@Id
 	private String id;
 
-	@Setter @NotBlank @Size(min = 5, max = 50)
+	@Setter
 	private String name;
 	
-	@Setter @NotBlank @Email @Size(min = 5, max = 50)
+	@Setter
 	private String email;
 	
-	@Setter @NotBlank @NotEmpty
+	@Setter
 	private String password;
 	
 	@DBRef(lazy = true)

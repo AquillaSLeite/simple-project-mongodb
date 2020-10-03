@@ -42,9 +42,9 @@ public class DataBaseSeeder implements CommandLineRunner{
 		List<User> users = userRepository.saveAll(Arrays.asList(user1, user2, user3));
 		
 		for(User user : users) {
-			Post post1 = new Post(null, Instant.now(), user.getName() + " - title1", "body1", modelMapper.map(user, AuthorDTO.class));
-			Post post2 = new Post(null, Instant.now(), user.getName() + " - title2", "body2", modelMapper.map(user, AuthorDTO.class));
-			Post post3 = new Post(null, Instant.now(), user.getName() + " - title3", "body3", modelMapper.map(user, AuthorDTO.class));
+			Post post1 = new Post(null, Instant.now(), user.getName() + " - title1", "body1", user);
+			Post post2 = new Post(null, Instant.now(), user.getName() + " - title2", "body2", user);
+			Post post3 = new Post(null, Instant.now(), user.getName() + " - title3", "body3", user);
 			postRepository.saveAll(Arrays.asList(post1, post2, post3));
 			
 			user.getPosts().addAll(Arrays.asList(post1, post2, post3));

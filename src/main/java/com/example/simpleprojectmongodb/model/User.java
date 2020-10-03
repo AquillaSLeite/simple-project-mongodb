@@ -23,22 +23,23 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
+@Getter
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	@Id @Getter
+	@Id
 	private String id;
 
-	@Getter @Setter @NotBlank @Size(min = 5, max = 50)
+	@Setter @NotBlank @Size(min = 5, max = 50)
 	private String name;
 	
-	@Getter @Setter @NotBlank @Email @Size(min = 5, max = 50)
+	@Setter @NotBlank @Email @Size(min = 5, max = 50)
 	private String email;
 	
-	@Getter @Setter @NotBlank @NotEmpty
+	@Setter @NotBlank @NotEmpty
 	private String password;
 	
-	@Getter @DBRef(lazy = true)
+	@DBRef(lazy = true)
 	List<Post> posts = new ArrayList<>();
 
 	public User(String id, String name, String email, String password) {

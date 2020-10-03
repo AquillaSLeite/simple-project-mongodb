@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.example.simpleprojectmongodb.model.User;
 import com.example.simpleprojectmongodb.model.dto.request.UserSaveDTO;
 import com.example.simpleprojectmongodb.model.dto.request.UserUpdateDTO;
+import com.example.simpleprojectmongodb.model.dto.response.PostDTO;
 import com.example.simpleprojectmongodb.model.dto.response.UserDTO;
 import com.example.simpleprojectmongodb.model.repository.UserRepository;
 import com.example.simpleprojectmongodb.model.resource.exception.ResourceNotFound;
@@ -83,5 +84,13 @@ public class UserService {
 	
 	public void delete(String id) {
 		repository.deleteById(this.findAndValidateById(id).getId());
+	}
+	
+	public List<PostDTO> postsByUser(String id) {
+		return this.findAndValidateById(id)
+				.getPosts()
+				.stream()
+				.map(obj -> PostDTO.fromResource(obj))
+				.collect(Collectors.toList());
 	}
 }

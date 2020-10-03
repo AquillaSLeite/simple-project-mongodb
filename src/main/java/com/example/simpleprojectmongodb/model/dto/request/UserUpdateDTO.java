@@ -6,13 +6,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.springframework.context.annotation.Configuration;
-
 import com.example.simpleprojectmongodb.model.User;
 
 import lombok.Data;
 
-@Configuration
 @Data
 public class UserUpdateDTO implements Serializable {
 	private static final long serialVersionUID = 1L;

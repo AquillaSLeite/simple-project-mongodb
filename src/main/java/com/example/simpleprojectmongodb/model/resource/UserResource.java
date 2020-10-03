@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.simpleprojectmongodb.model.User;
 import com.example.simpleprojectmongodb.model.dto.request.UserSaveDTO;
 import com.example.simpleprojectmongodb.model.dto.request.UserUpdateDTO;
+import com.example.simpleprojectmongodb.model.dto.response.PostDTO;
 import com.example.simpleprojectmongodb.model.dto.response.UserDTO;
 import com.example.simpleprojectmongodb.model.service.UserService;
 
@@ -75,8 +75,7 @@ public class UserResource {
 	
 	
 	@GetMapping(value = "/{id}/posts")
-	public User findPosts(@PathVariable String id) {
-		/*User user = service.findById(id);*/
-		return null;
+	public List<PostDTO> findPosts(@PathVariable String id) {
+		return service.postsByUser(id);
 	}
 }

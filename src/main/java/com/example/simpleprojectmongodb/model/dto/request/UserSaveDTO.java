@@ -5,13 +5,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.springframework.context.annotation.Configuration;
-
 import com.example.simpleprojectmongodb.model.User;
 
 import lombok.Data;
 
-@Configuration
 @Data
 public class UserSaveDTO {
 	private String id;
